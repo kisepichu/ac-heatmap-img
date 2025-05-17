@@ -1,9 +1,26 @@
 .cursor/rules
 .DS_Store
 
+# Dependencies
 node_modules/
-dist/
-.env
-pnpm-lock.yaml
 
+# Build outputs
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Cache
 cache/
+.pnpm-store/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

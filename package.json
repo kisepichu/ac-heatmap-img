@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "GitHub activity heatmap image generator",
   "type": "module",
+  "engines": {
+    "node": ">=23.11.0",
+    "pnpm": ">=10.8.1"
+  },
   "scripts": {
     "dev": "NODE_ENV=development tsx src/main.ts",
     "start": "NODE_ENV=production tsx src/main.ts",
