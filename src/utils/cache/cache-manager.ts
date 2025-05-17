@@ -2,6 +2,13 @@ import { mkdir, readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { CacheError, err, ok, Result } from '../../core/types/result';
 
+interface ErrnoException extends Error {
+  errno?: number;
+  code?: string;
+  path?: string;
+  syscall?: string;
+}
+
 export class FileSystemCacheManager {
   constructor(private readonly cacheDir: string = 'cache') {}
 
@@ -24,7 +31,7 @@ export class FileSystemCacheManager {
       const data = await readFile(path, 'utf-8');
       return ok(JSON.parse(data) as T);
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      if ((error as ErrnoException).code === 'ENOENT') {
         return ok(null);
       }
       return err(new CacheError('Failed to read from cache', error));
