@@ -1,1 +1,7 @@
-.cursorrules
+.cursor/rules
+.DS_Store
+
+node_modules/
+dist/
+.env
+pnpm-lock.yaml
