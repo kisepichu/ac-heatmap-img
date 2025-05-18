@@ -1,3 +1,8 @@
-[
-  "kisepichu"
-]
+{
+  "users": [
+    "kisepichu"
+  ],
+  "theme": {
+    "mode": "chat_gpt_pastel_dreams"
+  }
+}

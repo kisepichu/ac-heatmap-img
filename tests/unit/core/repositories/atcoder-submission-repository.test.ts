@@ -75,8 +75,16 @@ describe('AtCoderSubmissionRepository', () => {
   it('should handle pagination when API returns max submissions', async () => {
     const mockClient = new AtCoderProblemsClient();
     const mockCacheManager = new FileSystemCacheManager();
-    const submissions = Array(500).fill(mockSubmission);
-    const nextSubmission = { ...mockSubmission, epoch_second: 1577836801 };
+    const submissions = Array(500).fill(null).map((_, index) => ({
+      ...mockSubmission,
+      id: index + 1,
+      epoch_second: mockSubmission.epoch_second + index
+    }));
+    const nextSubmission = {
+      ...mockSubmission,
+      id: 501,
+      epoch_second: mockSubmission.epoch_second + 500
+    };
 
     vi.spyOn(mockCacheManager, 'get').mockResolvedValue(ok(null));
     vi.spyOn(mockClient, 'fetchSubmissions')
