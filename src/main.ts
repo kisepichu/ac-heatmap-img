@@ -9,7 +9,7 @@ import { logger } from './utils/logger';
 async function main(): Promise<void> {
   // 仮のパラメータ
   const userId = 'kisepichu';
-  const year = 2022;
+  const year = 2018;
   const outputPath = path.resolve(process.cwd(), 'dist', userId, `${year}.png`);
 
   // 依存関係の初期化
