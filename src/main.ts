@@ -64,6 +64,7 @@ async function main(): Promise<void> {
         const configContent = await fs.readFile(configPath, 'utf-8');
         userIds = JSON.parse(configContent);
       } catch (error) {
+        logger.error('config.jsonの読み込みに失敗しました:', error);
         logger.info('まず README.md を見て config.json を作成してください');
         return;
       }
@@ -79,12 +80,21 @@ async function main(): Promise<void> {
 
   // 現在の年を取得
   const currentYear = new Date().getFullYear();
-  const startYear = 2014; // AtCoderの開始年
 
   // 各ユーザーについて処理
   for (const userId of userIds) {
     logger.info(`ユーザー ${userId} の処理を開始します...`);
-    
+
+    // ユーザーの最初の提出年を取得
+    const firstYearResult = await repository.getFirstSubmissionYear(userId);
+    if (!firstYearResult.success) {
+      logger.error(`ユーザー ${userId} の最初の提出年の取得に失敗しました:`, firstYearResult.error);
+      continue;
+    }
+
+    const startYear = firstYearResult.data;
+    logger.info(`ユーザー ${userId} の最初の提出は ${startYear} 年です`);
+
     // 各年について処理
     for (let year = startYear; year <= currentYear; year++) {
       await generateHeatmapImage(userId, year, service, imageGenerator);

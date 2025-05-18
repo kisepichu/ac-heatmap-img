@@ -22,6 +22,21 @@ export class AtCoderSubmissionRepository implements SubmissionRepository {
     return Math.floor(new Date(Date.UTC(year, 0, 1, -9, 0, 0)).getTime() / 1000);
   }
 
+  async getFirstSubmissionYear(userId: string): Promise<Result<number>> {
+    // APIから最古の提出を取得
+    const result = await this.client.fetchSubmissions(userId, 0);
+    if (!result.success) {
+      return result;
+    }
+
+    if (result.data.length === 0) {
+      return err(new AppError('No submissions found'));
+    }
+
+    const firstSubmission = result.data.sort((a, b) => a.epoch_second - b.epoch_second)[0];
+    return ok(new Date(firstSubmission.epoch_second * 1000).getFullYear());
+  }
+
   async getCachedSubmissions(userId: string): Promise<Result<SubmissionCache | null>> {
     const cacheKey = this.getCacheKey(userId);
     return await this.cacheManager.get<SubmissionCache>(cacheKey);

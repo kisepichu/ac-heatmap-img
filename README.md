@@ -9,7 +9,7 @@ GitHub のユーザーページ用に、 AtCoder の提出履歴の GitHub の�
 
 例
 <a href="https://atcoder.jp/users/kisepichu">
-  <img src="https://kisepichu.github.io/ac-heatmap-img-test/kisepichu/2022.png" alt="AtCoder Heatmap" />
+  <img src="https://kisepichu.github.io/ac-heatmap-img/kisepichu/2022.png" alt="AtCoder Heatmap" />
 </a>
 
 ## Usage
