@@ -1,0 +1,58 @@
+name: Update Heatmap
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 毎日 0 時
+  workflow_dispatch:  # 手動実行用
+  push:
+    paths:
+      - 'config.json'  # 設定ファイルが更新されたときに実行
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '23.11.0'
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v3
+      with:
+        version: '10.8.1'
+        run_install: false
+
+    - name: Get pnpm store directory
+      id: pnpm-cache
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+    - name: Setup pnpm cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Generate heatmap
+      run: pnpm start
+
+    - name: Commit and push if changed
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add dist/
+        git add cache/
+        git commit -m "chore: update heatmap" || exit 0
+        git push 
