@@ -52,11 +52,13 @@ jobs:
       run: pnpx puppeteer browsers install chrome
 
     - name: Generate heatmap
-      env:
-        TZ: 'Asia/Tokyo'
-        # config.json の変更時は強制更新を有効にする
-        FORCE_UPDATE: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.modified, ','), 'config.json') }}
-      run: pnpm start
+      shell: bash
+      run: |
+        if [[ "${{ github.event_name }}" == "push" && "${{ contains(join(github.event.commits.*.modified, ','), 'config.json') }}" == "true" ]]; then
+          TZ=Asia/Tokyo FORCE_UPDATE=true pnpm start
+        else
+          TZ=Asia/Tokyo pnpm start
+        fi
 
     - name: Commit and push if changed
       run: |
