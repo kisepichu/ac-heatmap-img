@@ -14,21 +14,25 @@ async function generateHeatmapImage(
   year: number,
   theme: Config['theme'],
   service: HeatmapService,
-  imageGenerator: ImageGenerator
+  imageGenerator: ImageGenerator,
+  forceUpdate: boolean
 ): Promise<void> {
   const outputDir = path.resolve(process.cwd(), 'dist', userId);
   const outputPath = path.resolve(outputDir, `${year}.png`);
+  const currentYear = new Date().getFullYear();
 
   // 出力ディレクトリが存在しない場合は作成
   await fs.mkdir(outputDir, { recursive: true });
 
-  // 既に画像が存在する場合はスキップ
-  try {
-    await fs.access(outputPath);
-    logger.info(`画像が既に存在します: ${outputPath}`);
-    return;
-  } catch {
-    // ファイルが存在しない場合は続行
+  // 強制更新でない場合のみ、既存の画像をスキップ
+  if (!forceUpdate && year !== currentYear) {
+    try {
+      await fs.access(outputPath);
+      logger.info(`画像が既に存在します(過去の年のため更新をスキップ): ${outputPath}`);
+      return;
+    } catch {
+      // ファイルが存在しない場合は続行
+    }
   }
 
   // ヒートマップデータの取得
@@ -36,6 +40,17 @@ async function generateHeatmapImage(
   if (!result.success) {
     logger.error(`ヒートマップデータの生成に失敗しました (${userId}, ${year}):`, result.error);
     return;
+  }
+
+  // 現在の年または強制更新の場合で、かつ画像が既に存在する場合は、更新メッセージを表示
+  if (
+    (year === currentYear || forceUpdate) &&
+    (await fs.access(outputPath).then(
+      () => true,
+      () => false
+    ))
+  ) {
+    logger.info(`画像を更新します${forceUpdate ? '(強制更新)' : '(現在の年)'}`);
   }
 
   // 画像の生成
@@ -56,6 +71,12 @@ async function main(): Promise<void> {
   const repository = new AtCoderSubmissionRepository(client, cacheManager);
   const service = new HeatmapService(repository);
   const imageGenerator = new ImageGenerator();
+
+  // 強制更新フラグを環境変数から取得
+  const forceUpdate = env.FORCE_UPDATE === 'true';
+  if (forceUpdate) {
+    logger.info('強制更新モードで実行します');
+  }
 
   // config.jsonの読み込み
   let config: Config;
@@ -98,7 +119,7 @@ async function main(): Promise<void> {
 
     // 各年について処理
     for (let year = startYear; year <= currentYear; year++) {
-      await generateHeatmapImage(userId, year, config.theme, service, imageGenerator);
+      await generateHeatmapImage(userId, year, config.theme, service, imageGenerator, forceUpdate);
     }
   }
 }
