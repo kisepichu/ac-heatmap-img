@@ -5,12 +5,14 @@ import { AtCoderProblemsClient } from './api/atcoder-problems-client';
 import { AtCoderSubmissionRepository } from './core/repositories/atcoder-submission-repository';
 import { HeatmapService } from './core/services/heatmap-service';
 import { ImageGenerator } from './services/ImageGenerator';
+import { Config } from './types/config';
 import { FileSystemCacheManager } from './utils/cache/cache-manager';
 import { logger } from './utils/logger';
 
 async function generateHeatmapImage(
   userId: string,
   year: number,
+  theme: Config['theme'],
   service: HeatmapService,
   imageGenerator: ImageGenerator
 ): Promise<void> {
@@ -38,7 +40,7 @@ async function generateHeatmapImage(
 
   // 画像の生成
   try {
-    await imageGenerator.generateImage(result.data, year, outputPath);
+    await imageGenerator.generateImage(result.data, year, theme, outputPath);
     logger.info(`画像を生成しました: ${outputPath}`);
   } catch (error) {
     logger.error(`画像の生成に失敗しました (${userId}, ${year}):`, error);
@@ -56,25 +58,24 @@ async function main(): Promise<void> {
   const imageGenerator = new ImageGenerator();
 
   // config.jsonの読み込み
-  let userIds: string[] = [];
+  let config: Config;
   try {
-    if (env.NODE_ENV === 'production') {
-      const configPath = path.resolve(process.cwd(), 'config.json');
-      try {
-        const configContent = await fs.readFile(configPath, 'utf-8');
-        userIds = JSON.parse(configContent);
-      } catch (error) {
-        logger.error('config.jsonの読み込みに失敗しました:', error);
-        logger.info('まず README.md を見て config.json を作成してください');
-        return;
-      }
-    } else {
-      const configPath = path.resolve(process.cwd(), 'config-dev.json');
+    const configPath = path.resolve(
+      process.cwd(),
+      env.NODE_ENV === 'production' ? 'config.json' : 'config-dev.json'
+    );
+    try {
       const configContent = await fs.readFile(configPath, 'utf-8');
-      userIds = JSON.parse(configContent);
+      config = JSON.parse(configContent);
+    } catch (error) {
+      logger.error('設定ファイルの読み込みに失敗しました:', error);
+      if (env.NODE_ENV === 'production') {
+        logger.info('まず README.md を見て config.json を作成してください');
+      }
+      return;
     }
   } catch (error) {
-    logger.error('config.jsonの読み込みに失敗しました:', error);
+    logger.error('設定ファイルの読み込みに失敗しました:', error);
     process.exit(1);
   }
 
@@ -82,7 +83,7 @@ async function main(): Promise<void> {
   const currentYear = new Date().getFullYear();
 
   // 各ユーザーについて処理
-  for (const userId of userIds) {
+  for (const userId of config.users) {
     logger.info(`ユーザー ${userId} の処理を開始します...`);
 
     // ユーザーの最初の提出年を取得
@@ -97,7 +98,7 @@ async function main(): Promise<void> {
 
     // 各年について処理
     for (let year = startYear; year <= currentYear; year++) {
-      await generateHeatmapImage(userId, year, service, imageGenerator);
+      await generateHeatmapImage(userId, year, config.theme, service, imageGenerator);
     }
   }
 }
