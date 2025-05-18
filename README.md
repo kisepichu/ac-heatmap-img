@@ -15,7 +15,7 @@ GitHub のユーザーページ用に、 AtCoder の提出履歴の GitHub の�
 ## Usage
 
 1. このリポジトリごと [fork](https://github.com/kisepichu/ac-heatmap-img/fork) します。
-2. https://github.com/username/ac-heatmap-img/new/main?filename=config.json&value=%5B%22atcoder_id%22%5D に AtCoder のユーザー名を入力しコミットします。(atcoder_id は自分の GitHub ユーザー名に変更してください)
+2. https://github.com/username/ac-heatmap-img/new/main?filename=config.json&value=%5B%22atcoder_id%22%5D に AtCoder のユーザー名を入力しコミットします。(username は自分の GitHub ユーザー名に変更してください)
 3. 自分のユーザーページ (https://github.com/username/username) の README.md などに、以下のいずれかの方法で画像を埋め込みます:
 
 ```markdown
