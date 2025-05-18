@@ -3,7 +3,7 @@
     "kisepichu"
   ],
   "theme": {
-    "mode": "dark_dimmed",
+    "mode": "chat_gpt_matcha_mocha",
     "options": {
       "cellRadius": 2,
       "cellGap": 2

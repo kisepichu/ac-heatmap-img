@@ -49,7 +49,7 @@
         date.setHours(0, 0, 0, 0);
         return {
           date: date.getTime(),
-          value: 10 * (count.acCount > 0 ? count.acCount : -count.nonAcCount),
+          value: count.acCount > 0 ? count.acCount : -count.nonAcCount,
         };
       });
 
