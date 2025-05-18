@@ -128,7 +128,7 @@ export class AtCoderSubmissionRepository implements SubmissionRepository {
       const allCachedSubmissions = this.removeDuplicates([
         ...existingSubmissions,
         ...latestSubmissions,
-      ]);
+      ]).sort((a, b) => a.epoch_second - b.epoch_second);
 
       // 最新のepoch_secondを取得
       const lastEpochSecond = Math.max(...allCachedSubmissions.map((s) => s.epoch_second));
