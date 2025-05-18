@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development tsx src/main.ts",
+    "dev:force": "FORCE_UPDATE=true NODE_ENV=development tsx src/main.ts",
     "start": "NODE_ENV=production tsx src/main.ts",
     "test": "vitest",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
