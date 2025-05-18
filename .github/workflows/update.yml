@@ -47,9 +47,10 @@ jobs:
 
     - name: Install Chrome
       run: pnpx puppeteer browsers install chrome
-      id: install-chrome
 
     - name: Generate heatmap
+      env:
+        TZ: 'Asia/Tokyo'
       run: pnpm start
 
     - name: Commit and push if changed
