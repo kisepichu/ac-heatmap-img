@@ -45,15 +45,11 @@ jobs:
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
 
-    - name: Setup Chrome
-      id: setup-chrome
-      uses: browser-actions/setup-chrome@v1
-      with:
-        chrome-version: stable
+    - name: Install Chrome
+      run: pnpx puppeteer browsers install chrome
+      id: install-chrome
 
     - name: Generate heatmap
-      env:
-        PUPPETEER_EXECUTABLE_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
       run: pnpm start
 
     - name: Commit and push if changed
