@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      margin: 0;
+      padding: 16px;
+      background-color: #0d1117;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    #heatmap {
+      background-color: #161b22;
+      border-radius: 6px;
+      padding: 16px;
+    }
+
+    /* cal-heatmapのスタイル上書き */
+    .ch-container text {
+      fill: #8b949e !important;
+    }
+
+    .ch-domain-text {
+      font-size: 10px;
+    }
+
+    .ch-subdomain-text {
+      font-size: 8px;
+    }
+  </style>
+  <script src="https://unpkg.com/cal-heatmap@4.2.4/dist/cal-heatmap.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/cal-heatmap@4.2.4/dist/cal-heatmap.css" />
+</head>
+
+<body>
+  <div id="heatmap"></div>
+  <script>
+    // cal-heatmapのスクリプトはPuppeteerから注入します
+    window.renderHeatmap = async function (data, year) {
+      // データを配列形式に変換
+      const dataArray = Object.entries(data).map(([dateStr, count]) => {
+        const date = new Date(dateStr);
+        date.setHours(0, 0, 0, 0);
+        return {
+          date: date.getTime(), // ミリ秒単位のタイムスタンプ
+          value: count.acCount > 0 ? count.acCount : -count.nonAcCount,
+        };
+      });
+
+      // cal-heatmapのインスタンスを作成
+      const cal = new CalHeatmap();
+
+      // ヒートマップを描画
+      await cal.paint({
+        itemSelector: '#heatmap',
+        date: {
+          start: new Date(year, 1, 1),
+          min: new Date(year, 1, 1),
+          max: new Date(year + 1, 1, 1),
+          timezone: '+09:00', // JST
+        },
+        range: 12,
+        domain: {
+          type: 'month',
+          gutter: 2,
+          label: {
+            text: 'MMM',
+            textAlign: 'start',
+            position: 'top',
+          },
+          sort: 'asc', // 月を昇順で表示
+        },
+        subDomain: {
+          type: 'ghDay',
+          width: 10,
+          height: 10,
+          gutter: 2,
+          radius: 2,
+        },
+        scale: {
+          color: {
+            type: 'threshold',
+            range: [
+              // 黄色のグラデーション（non-AC）
+              '#ffd700',
+              '#ffe14c',
+              '#ffee7c',
+              '#fff5b1',
+              // 0: 提出なし
+              '#ebedf0',
+              // 緑のグラデーション（AC）
+              '#9be9a8',
+              '#40c463',
+              '#30a14e',
+              '#216e39',
+            ],
+            domain: [-8, -4, -1, 0, 1, 4, 8],
+          },
+        },
+        data: {
+          source: dataArray,
+          x: 'date',
+          y: 'value',
+          defaultValue: 0,
+        },
+        verticalOrientation: false,
+        continuous: true,
+      });
+    };
+  </script>
+</body>
+
+</html>

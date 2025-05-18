@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "GitHub activity heatmap image generator",
   "type": "module",
+  "engines": {
+    "node": ">=23.11.0",
+    "pnpm": ">=10.8.1"
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "dev": "NODE_ENV=development tsx src/main.ts",
+    "start": "NODE_ENV=production tsx src/main.ts",
     "test": "vitest",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
@@ -23,17 +26,20 @@
   "license": "ISC",
   "packageManager": "pnpm@10.8.1",
   "devDependencies": {
-    "@types/node": "^20.11.24",
-    "@typescript-eslint/eslint-plugin": "^8.32.0",
-    "@typescript-eslint/parser": "^8.32.0",
-    "eslint": "^8.56.0",
-    "jsdom": "^26.1.0",
-    "prettier": "^3.2.5",
-    "typescript": "^5.3.3",
-    "vite": "^5.1.4",
-    "vitest": "^1.3.1"
+    "@eslint/js": "^9.27.0",
+    "@types/node": "^20.17.47",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "cal-heatmap": "^4.2.4",
+    "eslint": "^9.27.0",
+    "globals": "^16.1.0",
+    "prettier": "^3.5.3",
+    "puppeteer": "^24.8.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^1.6.1"
   },
   "dependencies": {
-    "cal-heatmap": "^4.2.4"
+    "d3": "^7.9.0"
   }
 }
