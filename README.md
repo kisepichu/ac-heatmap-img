@@ -13,7 +13,7 @@ GitHub のユーザーページ用に、 AtCoder の提出履歴の GitHub の�
 ## Usage
 
 1. このリポジトリを [fork](https://github.com/kisepichu/ac-heatmap-img/fork) します。
-2. https://github.com/username/ac-heatmap-img/new/main?filename=config.json&value=%5B%22atcoder_id%22%5D を開き、url の username を自分の GitHub ユーザー名に変更し、出てきたエディタで AtCoder のユーザー名を入力しコミットします。
+2. https://github.com/username/ac-heatmap-img/new/main?filename=config.json&value=%7B%22users%22%3A%5B%22atcoder_id%22%5D%2C%22theme%22%3A%7B%22mode%22%3A%22light_default%22%7D%7D を開き、url の username を自分の GitHub ユーザー名に変更し、出てきたエディタで AtCoder のユーザー名を入力しコミットします。
 3. 自分のユーザーページ (https://github.com/username/username) の README.md などに、以下のいずれかの方法で画像を埋め込みます:
 
 ```markdown
@@ -55,4 +55,5 @@ URL の年数を変更することで、異なる年のヒートマップを表�
 
 - [AtCoder Problems API](https://github.com/kenkoooo/AtCoderProblems) - MIT License
   - 提出データの取得に利用させていただいています。
+
 

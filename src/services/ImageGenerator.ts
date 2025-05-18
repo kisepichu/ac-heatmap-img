@@ -53,7 +53,7 @@ export class ImageGenerator {
       // ビューポートサイズを設定
       await page.setViewport({
         width: 686,
-        height: 200,
+        height: 160,
         deviceScaleFactor: 2, // Retina相当の解像度
       });
 
@@ -64,7 +64,6 @@ export class ImageGenerator {
       await page.evaluate(
         `window.renderHeatmap(${JSON.stringify(data)}, ${year}, ${JSON.stringify({
           ...themeColors,
-          options: theme.options,
         })})`
       );
 

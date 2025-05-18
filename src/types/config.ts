@@ -13,17 +13,10 @@ export type ThemeMode =
   | 'cursor_nord'
   | 'chat_gpt_pastel_dreams'
   | 'chat_gpt_matcha_mocha'
-  | 'chat_gpt_midnight_neon'
-  | 'chat_gpt_sunset_serenity';
-
-export interface ThemeOptions {
-  cellRadius: number;
-  cellGap: number;
-}
+  | 'chat_gpt_midnight_neon';
 
 export interface ThemeConfig {
   mode: ThemeMode;
-  options: ThemeOptions;
 }
 
 export interface Config {

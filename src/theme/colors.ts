@@ -85,8 +85,8 @@ const darkDefault: ThemeColors = {
     '#7a4600',
     '#4b2900',
     '#161b22',
-    '#003820',
     '#006d32',
+    '#138833',
     '#26a641',
     '#39d353',
   ],
@@ -166,9 +166,9 @@ const darkDimmed: ThemeColors = {
   text: '#adbac7',
   levels: [
     '#d1a100',
-    '#a36a00',
-    '#7a4c00',
-    '#4b2e00',
+    '#a37a00',
+    '#7a5c00',
+    '#4b3e00',
     '#2d333b',
     '#005f3f',
     '#238636',
@@ -182,33 +182,32 @@ const cursorMatrix: ThemeColors = {
   border: '#1e1e1e',
   text: '#00ff41',
   levels: [
-    '#ff0000', 
+    '#ff0000',
     '#cc0000',
     '#990000',
     '#660000',
-    '#0f160f', 
-    '#00b32d', 
+    '#0f160f',
+    '#00b32d',
     '#00cc33',
     '#00e639',
-    '#00ff41', 
+    '#00ff41',
   ],
 };
-
 
 const cursorNord: ThemeColors = {
   background: '#2e3440',
   border: '#434c5e',
   text: '#eceff4',
   levels: [
-    '#bf616a', 
+    '#bf616a',
     '#d08770',
-    '#ebcb8b',
     '#e5c07b',
-    '#3b4252', 
-    '#8fbcbb', 
-    '#88c0d0',
+    '#ebcb80',
+    '#3b4252',
+    '#5e81ac',
     '#81a1c1',
-    '#5e81ac', 
+    '#88c0d0',
+    '#8fbcbb',
   ],
 };
 
@@ -251,35 +250,17 @@ const chatGptMidnightNeon: ThemeColors = {
   border: '#2c2f3a',
   text: '#c5cbe3',
   levels: [
-    '#85004b',
-    '#a00060',
-    '#c00075',
     '#e04c9a',
+    '#c00075',
+    '#a00060',
+    '#85004b',
     '#1b1d2a',
-    '#00ffe7',
-    '#00d6b6',
-    '#00aa8e',
     '#007766',
+    '#00aa8e',
+    '#00d6b6',
+    '#00ffe7',
   ],
 };
-
-const chatGptSunsetSerenity: ThemeColors = {
-  background: '#fff8f0',
-  border: '#e0cbbf',
-  text: '#5c3c3c',
-  levels: [
-    '#ff6b6b',
-    '#ff8c75',
-    '#ffac8c',
-    '#ffd3b6',
-    '#fdf2e9',
-    '#d0f4de',
-    '#a1e8cc',
-    '#70d6aa',
-    '#49c393',
-  ],
-};
-
 
 export const getThemeColors = (mode: ThemeMode): ThemeColors => {
   switch (mode) {
@@ -308,12 +289,10 @@ export const getThemeColors = (mode: ThemeMode): ThemeColors => {
     case 'cursor_nord':
       return cursorNord;
     case 'chat_gpt_pastel_dreams':
-      return chatGptPastelDreams; 
+      return chatGptPastelDreams;
     case 'chat_gpt_matcha_mocha':
       return chatGptMatchaMocha;
     case 'chat_gpt_midnight_neon':
       return chatGptMidnightNeon;
-    case 'chat_gpt_sunset_serenity':
-      return chatGptSunsetSerenity;
   }
 };

@@ -3,10 +3,6 @@
     "kisepichu"
   ],
   "theme": {
-    "mode": "chat_gpt_matcha_mocha",
-    "options": {
-      "cellRadius": 2,
-      "cellGap": 2
-    }
+    "mode": "light_default"
   }
 }
