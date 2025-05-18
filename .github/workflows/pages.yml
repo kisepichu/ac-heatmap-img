@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   # update.yml の実行後に実行
   workflow_run:
-    workflows: ["Update Heatmap Images"]
+    workflows: ["Update Heatmap"]
     types:
       - completed
     branches:
