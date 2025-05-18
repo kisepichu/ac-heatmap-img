@@ -45,7 +45,10 @@ async function generateHeatmapImage(
   // 現在の年または強制更新の場合で、かつ画像が既に存在する場合は、更新メッセージを表示
   if (
     (year === currentYear || forceUpdate) &&
-    fileExistsResult
+    (await fs.access(outputPath).then(
+      () => true,
+      () => false
+    ))
   ) {
     logger.info(`画像を更新します${forceUpdate ? '(強制更新)' : '(現在の年)'}`);
   }
