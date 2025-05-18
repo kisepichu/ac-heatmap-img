@@ -2,7 +2,7 @@ name: Update Heatmap
 
 on:
   schedule:
-    - cron: '45 15 * * *'  # 毎日 15:45 (JST だと 0:35 (仮))
+    - cron: '0 15 * * *'  # 毎日 0:00
   workflow_dispatch:  # 手動実行用
   push:
     branches:
