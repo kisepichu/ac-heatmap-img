@@ -55,7 +55,7 @@ jobs:
       env:
         TZ: 'Asia/Tokyo'
         # config.json の変更時は強制更新を有効にする
-        FORCE_UPDATE: ${{ github.event_name == 'push' && contains(github.event.commits[0].modified, 'config.json') }}
+        FORCE_UPDATE: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.modified, ','), 'config.json') }}
       run: pnpm start
 
     - name: Commit and push if changed
