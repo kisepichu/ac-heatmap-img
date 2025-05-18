@@ -14,7 +14,9 @@ export class ImageGenerator {
    * @param outputPath 出力先のパス
    */
   async generateImage(data: HeatmapData, year: number, outputPath: string): Promise<void> {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     try {
       const page = await browser.newPage();
 
