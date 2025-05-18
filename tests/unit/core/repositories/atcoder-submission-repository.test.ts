@@ -139,3 +139,4 @@ describe('AtCoderSubmissionRepository', () => {
     expect(mockClient.fetchSubmissions).not.toHaveBeenCalled();
   });
 }); 
+ 

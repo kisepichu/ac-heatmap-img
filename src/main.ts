@@ -18,17 +18,20 @@ async function generateHeatmapImage(
 ): Promise<void> {
   const outputDir = path.resolve(process.cwd(), 'dist', userId);
   const outputPath = path.resolve(outputDir, `${year}.png`);
+  const currentYear = new Date().getFullYear();
 
   // 出力ディレクトリが存在しない場合は作成
   await fs.mkdir(outputDir, { recursive: true });
 
-  // 既に画像が存在する場合はスキップ
-  try {
-    await fs.access(outputPath);
-    logger.info(`画像が既に存在します: ${outputPath}`);
-    return;
-  } catch {
-    // ファイルが存在しない場合は続行
+  // 現在の年でない場合のみ、既存の画像をスキップ
+  if (year !== currentYear) {
+    try {
+      await fs.access(outputPath);
+      logger.info(`画像が既に存在します: ${outputPath}`);
+      return;
+    } catch {
+      // ファイルが存在しない場合は続行
+    }
   }
 
   // ヒートマップデータの取得
@@ -36,6 +39,16 @@ async function generateHeatmapImage(
   if (!result.success) {
     logger.error(`ヒートマップデータの生成に失敗しました (${userId}, ${year}):`, result.error);
     return;
+  }
+
+  // 現在の年で、かつ画像が既に存在する場合は、新しい提出があるかチェック
+  if (year === currentYear) {
+    try {
+      await fs.access(outputPath);
+      logger.info(`現在の年(${year})の画像を更新します: ${outputPath}`);
+    } catch {
+      // ファイルが存在しない場合は何もしない
+    }
   }
 
   // 画像の生成
