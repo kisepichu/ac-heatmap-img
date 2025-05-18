@@ -59,6 +59,15 @@ export class AtCoderSubmissionRepository implements SubmissionRepository {
     return await this.cacheManager.set(cacheKey, cache);
   }
 
+  private removeDuplicates(submissions: Submission[]): Submission[] {
+    // idをキーとして重複を除去
+    const uniqueSubmissions = new Map<number, Submission>();
+    for (const submission of submissions) {
+      uniqueSubmissions.set(submission.id, submission);
+    }
+    return Array.from(uniqueSubmissions.values());
+  }
+
   async fetchUserSubmissions(userId: string, year: number): Promise<Result<Submission[]>> {
     const fromSecond = this.getYearStartEpoch(year);
     const nextYearStart = this.getYearStartEpoch(year + 1);
@@ -108,21 +117,22 @@ export class AtCoderSubmissionRepository implements SubmissionRepository {
       }
     }
 
-    // 新しい提出を追加
-    allSubmissions = [...allSubmissions, ...latestSubmissions].sort(
+    // 新しい提出を追加（重複を除去）
+    allSubmissions = this.removeDuplicates([...allSubmissions, ...latestSubmissions]).sort(
       (a, b) => a.epoch_second - b.epoch_second
     );
 
     // キャッシュの更新（全期間のデータを保持）
     if (latestSubmissions.length > 0) {
-      const lastEpochSecond = Math.max(
-        ...(cachedResult.data?.submissions ?? []).map((s) => s.epoch_second),
-        ...latestSubmissions.map((s) => s.epoch_second)
-      );
-      const allCachedSubmissions = [
-        ...(cachedResult.data?.submissions ?? []),
+      const existingSubmissions = cachedResult.data?.submissions ?? [];
+      const allCachedSubmissions = this.removeDuplicates([
+        ...existingSubmissions,
         ...latestSubmissions,
-      ].sort((a, b) => a.epoch_second - b.epoch_second);
+      ]).sort((a, b) => a.epoch_second - b.epoch_second);
+
+      // 最新のepoch_secondを取得
+      const lastEpochSecond = Math.max(...allCachedSubmissions.map((s) => s.epoch_second));
+
       const cacheResult = await this.cacheSubmissions(
         userId,
         allCachedSubmissions,

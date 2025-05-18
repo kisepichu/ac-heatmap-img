@@ -3,6 +3,8 @@ import path from 'path';
 import puppeteer from 'puppeteer';
 import { fileURLToPath } from 'url';
 import { HeatmapData } from '../core/types/heatmap';
+import { getThemeColors } from '../theme/colors';
+import { ThemeConfig } from '../types/config';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -11,9 +13,15 @@ export class ImageGenerator {
    * ヒートマップ画像を生成する
    * @param data ヒートマップデータ
    * @param year 対象年
+   * @param theme テーマ設定
    * @param outputPath 出力先のパス
    */
-  async generateImage(data: HeatmapData, year: number, outputPath: string): Promise<void> {
+  async generateImage(
+    data: HeatmapData,
+    year: number,
+    theme: ThemeConfig,
+    outputPath: string
+  ): Promise<void> {
     const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
@@ -45,12 +53,19 @@ export class ImageGenerator {
       // ビューポートサイズを設定
       await page.setViewport({
         width: 686,
-        height: 200,
+        height: 160,
         deviceScaleFactor: 2, // Retina相当の解像度
       });
 
+      // テーマの色設定を取得
+      const themeColors = getThemeColors(theme.mode);
+
       // データを注入してヒートマップを描画
-      await page.evaluate(`window.renderHeatmap(${JSON.stringify(data)}, ${year})`);
+      await page.evaluate(
+        `window.renderHeatmap(${JSON.stringify(data)}, ${year}, ${JSON.stringify({
+          ...themeColors,
+        })})`
+      );
 
       // 描画が完了するまで待機
       await page.waitForSelector('.ch-container');

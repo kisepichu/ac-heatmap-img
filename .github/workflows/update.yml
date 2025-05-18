@@ -5,6 +5,9 @@ on:
     - cron: '0 0 * * *'  # 毎日 0 時
   workflow_dispatch:  # 手動実行用
   push:
+    branches:
+      - main
+      - dev
     paths:
       - 'config.json'  # 設定ファイルが更新されたときに実行
 
